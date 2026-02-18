@@ -38,11 +38,13 @@ class _H5ShellPageState extends State<H5ShellPage> {
   String get h5Url => Platform.isAndroid ? _localDevUrlAndroid : _localDevUrlIOS;
 
   late final WebViewController _controller;
+  late String _currentUrl;
   int _loadingProgress = 0;
 
   @override
   void initState() {
     super.initState();
+    _currentUrl = h5Url;
     _controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(const Color(0x00000000))
@@ -56,7 +58,7 @@ class _H5ShellPageState extends State<H5ShellPage> {
           },
         ),
       )
-      ..loadRequest(Uri.parse(h5Url));
+      ..loadRequest(Uri.parse(_currentUrl));
   }
 
   Future<bool> _handleBack() async {
@@ -65,6 +67,50 @@ class _H5ShellPageState extends State<H5ShellPage> {
       return false;
     }
     return true;
+  }
+
+  Future<void> _changeUrl() async {
+    final inputController = TextEditingController(text: _currentUrl);
+    final next = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('设置 H5 地址'),
+        content: TextField(
+          controller: inputController,
+          autofocus: true,
+          decoration: const InputDecoration(
+            hintText: 'http://192.168.x.x:5173/',
+            border: OutlineInputBorder(),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('取消'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, inputController.text.trim()),
+            child: const Text('确定'),
+          ),
+        ],
+      ),
+    );
+
+    if (next == null || next.isEmpty) return;
+    final uri = Uri.tryParse(next);
+    if (uri == null || !(uri.isScheme('http') || uri.isScheme('https'))) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('地址格式不正确，请输入 http/https 地址')),
+      );
+      return;
+    }
+
+    setState(() {
+      _currentUrl = next;
+      _loadingProgress = 0;
+    });
+    await _controller.loadRequest(uri);
   }
 
   @override
@@ -79,6 +125,28 @@ class _H5ShellPageState extends State<H5ShellPage> {
         }
       },
       child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            _currentUrl,
+            style: const TextStyle(fontSize: 12),
+            overflow: TextOverflow.ellipsis,
+          ),
+          actions: [
+            IconButton(
+              onPressed: _changeUrl,
+              icon: Icon(Icons.link),
+              tooltip: '修改地址',
+            ),
+            IconButton(
+              onPressed: () {
+                setState(() => _loadingProgress = 0);
+                _controller.reload();
+              },
+              icon: const Icon(Icons.refresh),
+              tooltip: '刷新',
+            ),
+          ],
+        ),
         body: SafeArea(
           child: Column(
             children: [
