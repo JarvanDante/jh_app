@@ -1,4 +1,4 @@
-package com.jh.jh_app
+package com.jh.casino
 
 import io.flutter.embedding.android.FlutterActivity
 
