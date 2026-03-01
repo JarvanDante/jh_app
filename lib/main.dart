@@ -33,7 +33,7 @@ class H5ShellPage extends StatefulWidget {
 
 class _H5ShellPageState extends State<H5ShellPage> {
   static const String _localDevUrlIOS = 'http://192.168.254.141:5173/';
-  static const String _localDevUrlAndroid = 'http://192.168.254.141:5173/';
+  static const String _localDevUrlAndroid = 'https://h5.panalow.cc/';
 
   String get h5Url => Platform.isAndroid ? _localDevUrlAndroid : _localDevUrlIOS;
 
