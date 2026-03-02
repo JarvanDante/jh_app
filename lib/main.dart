@@ -81,19 +81,6 @@ class _H5ShellPageState extends State<H5ShellPage> {
         }
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('JH App'),
-          actions: [
-            IconButton(
-              onPressed: () {
-                setState(() => _loadingProgress = 0);
-                _controller.reload();
-              },
-              icon: const Icon(Icons.refresh),
-              tooltip: 'Refresh',
-            ),
-          ],
-        ),
         body: SafeArea(
           child: Column(
             children: [
