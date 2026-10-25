@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -32,10 +30,7 @@ class H5ShellPage extends StatefulWidget {
 }
 
 class _H5ShellPageState extends State<H5ShellPage> {
-  static const String _localDevUrlIOS = 'http://192.168.254.141:5173/';
-  static const String _localDevUrlAndroid = 'https://h5.panalow.cc/';
-
-  String get h5Url => Platform.isAndroid ? _localDevUrlAndroid : _localDevUrlIOS;
+  static const String h5Url = 'https://jh-h5.panalow.cc/';
 
   late final WebViewController _controller;
   late final String _currentUrl;
