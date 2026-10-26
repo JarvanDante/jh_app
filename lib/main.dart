@@ -1,7 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+const Color kShellColor = Color(0xFF552583);
+
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.light,
+      statusBarBrightness: Brightness.dark,
+      systemNavigationBarColor: Colors.transparent,
+      systemNavigationBarIconBrightness: Brightness.light,
+      systemNavigationBarContrastEnforced: false,
+    ),
+  );
   runApp(const JHApp());
 }
 
@@ -14,7 +29,8 @@ class JHApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'JH App',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF6C2AAE)),
+        colorScheme: ColorScheme.fromSeed(seedColor: kShellColor),
+        scaffoldBackgroundColor: kShellColor,
         useMaterial3: true,
       ),
       home: const H5ShellPage(),
@@ -42,7 +58,7 @@ class _H5ShellPageState extends State<H5ShellPage> {
     _currentUrl = h5Url;
     _controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setBackgroundColor(const Color(0x00000000))
+      ..setBackgroundColor(kShellColor)
       ..setNavigationDelegate(
         NavigationDelegate(
           onProgress: (progress) {
@@ -76,6 +92,7 @@ class _H5ShellPageState extends State<H5ShellPage> {
         }
       },
       child: Scaffold(
+        backgroundColor: kShellColor,
         body: SafeArea(
           child: Column(
             children: [
